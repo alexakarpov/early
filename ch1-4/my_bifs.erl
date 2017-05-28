@@ -1,5 +1,5 @@
 -module(my_bifs).
--export([my_tuple_to_list/1, timing/1]).
+-export([my_tuple_to_list/1, timing/1, date_string/0]).
 
 my_tuple_to_list(T) ->
     ttl_help(T, size(T), []).
@@ -13,3 +13,7 @@ timing(F) ->
     F(),
     Y = erlang:system_time(),
     Y-X.
+
+date_string() ->
+    {H, M, S} = erlang:time(),
+    io_lib:format('~2..0b~2..0b~2..0b', [H,M,S]).
