@@ -1,5 +1,5 @@
 -module(math_fun).
--export([odd/1, even/1, filter/2]).
+-export([odd/1, even/1, filter/2, split/1]).
 
 
 odd(X) when not is_integer(X) -> nan;
@@ -14,3 +14,8 @@ even(N) ->
 
 filter(F, L)->
     [X || X <- L, F(X) =:= true].
+
+split(L) ->
+    Odd = filter(fun odd/1, L),
+    Even = filter(fun even/1, L),
+    {Even, Odd}.
