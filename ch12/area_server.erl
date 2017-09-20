@@ -10,13 +10,16 @@ area(Pid, What) ->
 loop() ->
     receive
         {From, {rectangle, Width, Ht}} ->
+            io:format("Computing for rectangle...~n"),
             From ! {self(), Width*Ht},
             loop();
         {From, {square, Side}} ->
+            io:format("Computing for square...~n"),
             From ! {self(), Side*Side},
             loop();
         {From, Other} ->
-            From ! {self(), error, Other},
+            io:format("lolwut?~n"),
+            From ! {self(), {error, Other}},
             loop()
     end.
 
