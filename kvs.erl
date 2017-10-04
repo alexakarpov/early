@@ -28,10 +28,11 @@ loop() ->
             loop()
     end.
 
-echo_worker() ->
+echo_loop() ->
     io:format("starting~n"),
     receive
         {Pid, Msg} when is_pid(Pid)  ->
             io:format("received ~p from ~p ~n", [Msg, Pid]),
-            Pid ! {echo, self(), Msg}
+            Pid ! {echo, self(), Msg},
+            echo_loop()
     end.
