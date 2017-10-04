@@ -18,6 +18,6 @@ rpc(Pid, M, F, A) ->
 loop() ->
     receive
         {rpc, Pid, M, F, A} ->
-            Pid ! {self(), {catch apply(M, F, A))},
+            Pid ! {self(), (catch apply(M, F, A))},
             loop()
     end.
