@@ -31,7 +31,7 @@ loop() ->
 echo_worker() ->
     io:format("starting~n"),
     receive
-        Msg ->
-            io:format("received ~p~n", [Msg]),
-            {echo, Msg}
+        {Pid, Msg} when is_pid(Pid)  ->
+            io:format("received ~p from ~p ~n", [Msg, Pid]),
+            Pid ! {echo, Msg}
     end.
