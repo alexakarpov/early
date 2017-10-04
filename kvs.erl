@@ -1,5 +1,5 @@
 -module(kvs).
--export([start/0, store/2, lookup/1]).
+-export([start/0, store/2, lookup/1, echo_worker/0]).
 
 start() ->
     register(kvs, spawn(fun() -> loop() end)).
@@ -26,4 +26,12 @@ loop() ->
         {From, {lookup, Key}} ->
             From ! {kvs, get(Key)},
             loop()
+    end.
+
+echo_worker() ->
+    io:format("starting~n"),
+    receive
+        Msg ->
+            io:format("received ~p~n", [Msg]),
+            {echo, Msg}
     end.
