@@ -1,5 +1,5 @@
 -module(kvs).
--export([start/0, store/2, lookup/1, echo_worker/0]).
+-export([start/0, store/2, lookup/1, echo_loop/0]).
 
 start() ->
     register(kvs, spawn(fun() -> loop() end)).
