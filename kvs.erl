@@ -33,5 +33,5 @@ echo_worker() ->
     receive
         {Pid, Msg} when is_pid(Pid)  ->
             io:format("received ~p from ~p ~n", [Msg, Pid]),
-            Pid ! {echo, Pid, Msg}
+            Pid ! {echo, Msg}
     end.
