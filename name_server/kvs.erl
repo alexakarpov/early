@@ -1,6 +1,9 @@
 -module(kvs).
 -export([start/0, store/2, lookup/1, echo_loop/0]).
 
+% ########################################################
+%% public interface
+% ########################################################
 start() ->
     register(kvs, spawn(fun() -> loop() end)).
 
@@ -17,6 +20,9 @@ rpc(Q) ->
             Reply
     end.
 
+% ########################################################
+% implementation
+% ########################################################
 loop() ->
     receive
         {From, {store, Key, Value}} ->
