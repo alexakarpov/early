@@ -18,3 +18,5 @@ rebar3.crashdump
 *~
 *.so
 *.gz
+.DS_Store
+*.dat
