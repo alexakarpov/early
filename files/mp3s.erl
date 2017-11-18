@@ -3,7 +3,7 @@
 -export([test/0, dir/1, read_id3_tag/1]).
 
 test() ->
-    dir(".").
+    dir("/Users/akarpov/Dropbox").
 
 dir(Dir) ->
     Files = lib_find:files(Dir, "*.mp3", true),
