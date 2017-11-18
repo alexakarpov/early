@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(shout).
 
@@ -88,7 +88,7 @@ play_songs(Socket, PidSongServer, SoFar) ->
 send_file(S, Header, OffSet, Stop, Socket, SoFar) ->
     %% OffSet = first byte to play
     %% Stop   = The last byte we can play
-    Need = ?CHUNKSIZE - size(SoFar),
+    Need = ?CHUNKSIZE - byte_size(SoFar),
     Last = OffSet + Need,
     if
 	Last >= Stop ->
@@ -108,7 +108,7 @@ write_data(Socket, B0, B1, Header) ->
     %% Check that we really have got a block of the right size
     %% this is a very useful check that our program logic is
     %% correct
-    case size(B0) + size(B1) of
+    case byte_size(B0) + byte_size(B1) of
 	?CHUNKSIZE ->
 	    case gen_tcp:send(Socket, [B0, B1, the_header(Header)]) of
 		ok -> true;
@@ -120,7 +120,7 @@ write_data(Socket, B0, B1, Header) ->
 	_Other ->
 	    %% don't send the block - report an error
 	    io:format("Block length Error: B0 = ~p b1=~p~n",
-		      [size(B0), size(B1)])
+		      [byte_size(B0), byte_size(B1)])
     end.
 
 bump({K, H})     -> {K+1, H}.

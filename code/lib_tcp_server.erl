@@ -1,16 +1,16 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 %% Copyright (C) 2002, Joe Armstrong
 %% File    : lib_tcp_server.erl
 %% Author  : Joe Armstrong (joe@sics.se)
 %% Purpose : Keeps track of a number of TCP sessions
-%% Time-stamp: <2006-09-18 14:53:15 ejoearm>
+%% Time-stamp: <2012-10-12 08:33:25 joe>
 
 -module(lib_tcp_server).
 
@@ -242,12 +242,12 @@ trace_msg({yes, Tag}, Msg) ->
 
 send_term_with_length_check(Socket, Term) ->
     B = term_to_binary(Term),
-    Len = size(B),
+    Len = byte_size(B),
     B1 = <<Len:32>>,
     gen_tcp:send(Socket, [B1, B]).
 
 bin_with_length_to_term(<<Length:32,Bin/binary>>) ->
-    case size(Bin) of
+    case byte_size(Bin) of
 	Length ->
 	    %% io:format("packet length ok~n",[]),
 	    binary_to_term(Bin);

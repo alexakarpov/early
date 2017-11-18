@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 
 
@@ -41,7 +41,6 @@
 %% on all attached networks by sending to the special address 
 %% INADDR_BROADCAST, defined in <netinet/in.h>.
 
-
 -module(broadcast).
 -compile(export_all).
 
@@ -59,12 +58,10 @@ send(IoList) ->
 listen() ->
     {ok, _} = gen_udp:open(6000),
     loop().
-
 loop() ->
     receive
 	Any ->
 	    io:format("received:~p~n", [Any]),
 	    loop()
     end.
-
 

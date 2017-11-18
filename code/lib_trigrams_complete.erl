@@ -1,12 +1,11 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
-
 -module(lib_trigrams).
 -export([for_each_trigram_in_the_english_language/2,
 	 make_tables/0, timer_tests/0,
@@ -16,8 +15,6 @@
 	 lookup_all_ets/2, lookup_all_set/2
 	]).
 -import(lists, [reverse/1]).
-
-
 
 make_tables() ->
     {Micro1, N} = timer:tc(?MODULE, how_many_trigrams, []),
@@ -33,8 +30,6 @@ make_tables() ->
     FileSize3 = filelib:file_size("trigrams.set"),
     io:format("Module sets size=~p time/trigram=~p~n",[FileSize3/Ntri, Micro4/N]).
 
-
-
 make_ets_ordered_set() -> make_a_set(ordered_set, "trigramsOS.tab").
 make_ets_set()         -> make_a_set(set, "trigramsS.tab").
 
@@ -47,15 +42,11 @@ make_a_set(Type, FileName) ->
     ets:delete(Tab),
     Size.
 
-
-
 make_mod_set() ->
     D = sets:new(),
     F = fun(Str, Set) -> sets:add_element(list_to_binary(Str),Set) end,
     D1 = for_each_trigram_in_the_english_language(F, D),
     file:write_file("trigrams.set", [term_to_binary(D1)]).
-
-
 
 timer_tests() ->
     time_lookup_ets_set("Ets ordered Set", "trigramsOS.tab"),
@@ -85,13 +76,11 @@ time_lookup_module_sets() ->
 lookup_all_set(Set, L) ->
     lists:foreach(fun(Key) -> sets:is_element(Key, Set) end, L).
 
-
 how_many_trigrams() ->
     F = fun(_, N) -> 1 + N  end,
     for_each_trigram_in_the_english_language(F, 0).
     
 %% An iterator that iterates through all trigrams in the language
-
 for_each_trigram_in_the_english_language(F, A0) ->
     {ok, Bin0} = file:read_file("354984si.ngl.gz"),
     Bin = zlib:gunzip(Bin0),
@@ -122,12 +111,10 @@ scan_trigrams([X,Y,Z|T], F, A) ->
 scan_trigrams(_, _, A) ->
     A.
 
-
 %% access routines
 %%   open() -> Table
 %%   close(Table)
 %%   is_word(Table, String) -> Bool
-
 
 is_word(Tab, Str) -> is_word1(Tab, "\s" ++ Str ++ "\s").
 
@@ -152,4 +139,3 @@ open() ->
     I.
 
 close(Tab) -> ets:delete(Tab).
-

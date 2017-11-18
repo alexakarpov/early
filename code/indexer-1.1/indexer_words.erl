@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(indexer_words).
 -export([words_in_file/3, process_word/2]).
@@ -15,7 +15,6 @@
 %%     until we have evaluated indexer:starting
 %%     this is because we need to open the trigram tables and convert
 %%     filenames to absolute incides
-
 
 %%   Send {Word, Index} messages to Pid
 words_in_file(Pid, File, EtsTrigrams) ->
@@ -41,8 +40,6 @@ do_indexing(Pid, File, EtsTrigrams) ->
 				   end, 0),
     ets:delete(Tab).
 
-
-
 process_word(Word, Index, Tab, EtsTrigrams, Pid) ->
     case process_word(Word, EtsTrigrams) of
 	no -> void;
@@ -56,8 +53,6 @@ process_word(Word, Index, Tab, EtsTrigrams, Pid) ->
 		    void
 	    end
     end.
-
-
 
 %% @spec process_word(Word, EtsTrigram) -> {yes, Word1} | no 
 process_word(Word, EtsTrigrams) when length(Word) < 20 ->
@@ -77,7 +72,6 @@ process_word(Word, EtsTrigrams) when length(Word) < 20 ->
     end;
 process_word(_, _) ->
     no.
-
 
 to_lower_case([H|T]) when $A=< H, H=<$Z -> [H+$a-$A|to_lower_case(T)];
 to_lower_case([H|T])                    -> [H|to_lower_case(T)];

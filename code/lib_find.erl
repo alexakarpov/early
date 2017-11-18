@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(lib_find).
 -export([files/3, files/5]).
@@ -13,7 +13,7 @@
 -include_lib("kernel/include/file.hrl").
 
 files(Dir, Re, Flag) -> 
-    Re1 = regexp:sh_to_awk(Re),
+    Re1 = xmerl_regexp:sh_to_awk(Re),
     reverse(files(Dir, Re1, Flag, fun(File, Acc) ->[File|Acc] end, [])).
 
 files(Dir, Reg, Recursive, Fun, Acc) ->
@@ -26,11 +26,11 @@ find_files([File|T], Dir, Reg, Recursive, Fun, Acc0) ->
     FullName = filename:join([Dir,File]),
     case file_type(FullName) of
 	regular ->
-	    case regexp:match(FullName, Reg) of
-		{match, _, _}  -> 
+	    case re:run(FullName, Reg, [{capture,none}]) of
+		match  -> 
 		    Acc = Fun(FullName, Acc0),
 		    find_files(T, Dir, Reg, Recursive, Fun, Acc);
-		_ ->
+		nomatch ->
 		    find_files(T, Dir, Reg, Recursive, Fun, Acc0)
 	    end;
 	directory -> 

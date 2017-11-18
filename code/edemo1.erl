@@ -1,12 +1,11 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
-
 -module(edemo1).
 -export([start/2]).
 
@@ -17,8 +16,6 @@ start(Bool, M) ->
     sleep(1000),
     status(b, B),
     status(c, C).
-
-
 a() ->      
     process_flag(trap_exit, true),
     wait(a).
@@ -40,16 +37,12 @@ c(B, M) ->
 	    true
     end.
 
-
-
 wait(Prog) ->
     receive
 	Any ->
 	    io:format("Process ~p received ~p~n",[Prog, Any]),
 	    wait(Prog)
     end.
-
-
 
 sleep(T) ->
     receive
@@ -63,7 +56,6 @@ status(Name, Pid) ->
 	false ->
 	    io:format("process ~p (~p) is dead~n", [Name,Pid])
     end.
-
 
 %% 3> edemo1:start(false, {die, abc}).
 %% Process a received {'EXIT',<0.44.0>,abc}

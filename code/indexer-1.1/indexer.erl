@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(indexer).
 -export([start/0, stop/0, search/1, cold_start/0]).
@@ -24,11 +24,9 @@ cold_start() ->
 output_dir()    -> "/home/joe/bigIndex".
 dirs_to_index() -> ["/home/joe/pre2003/erl.supported"].
 
-
 start() ->
     indexer_server:start(output_dir()),
     spawn_link(fun() -> worker() end).
-
 
 search(Str) ->
     indexer_server:search(Str).
@@ -36,7 +34,6 @@ search(Str) ->
 stop() ->
     io:format("Scheduling a stop~n"),
     indexer_server:schedule_stop().
-
 
 worker() ->
     possibly_stop(),
@@ -52,7 +49,6 @@ worker() ->
 	    true
     end.
 
-
 possibly_stop() ->
     case indexer_server:should_i_stop() of
 	true ->
@@ -62,7 +58,6 @@ possibly_stop() ->
     	false ->
 	    void
     end.
-
 
 index_these_files(Files) ->
     Ets = indexer_server:ets_table(),
@@ -75,8 +70,6 @@ handle_result(Key, Vals, OutDir, Acc) ->
     add_to_file(OutDir, Key, Vals),
     Acc + 1.
 
-
-
 add_to_file(OutDir, Word, Is) ->
     L1 = map(fun(I) -> <<I:32>> end, Is),
     OutFile = filename:join(OutDir, Word),
@@ -87,7 +80,6 @@ add_to_file(OutDir, Word, Is) ->
 	{error, E} ->
 	      exit({ebadFileOp, OutFile, E})
     end.
-
 
 sleep(T) ->
     receive

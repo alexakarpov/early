@@ -1,15 +1,14 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(socket_examples).
 -compile(export_all).
 -import(lists, [reverse/1]).
-
 
 nano_get_url() ->
     nano_get_url("www.google.com").
@@ -27,8 +26,6 @@ receive_data(Socket, SoFar) ->
 	    list_to_binary(reverse(SoFar)) %% (5)
     end.
 
-
-
 nano_client_eval(Str) ->
     {ok, Socket} = 
 	gen_tcp:connect("localhost", 2345,
@@ -42,8 +39,6 @@ nano_client_eval(Str) ->
 	    gen_tcp:close(Socket)
     end.
 
-
-
 start_nano_server() ->
     {ok, Listen} = gen_tcp:listen(2345, [binary, {packet, 4},  %% (6)
 					 {reuseaddr, true},
@@ -51,7 +46,6 @@ start_nano_server() ->
     {ok, Socket} = gen_tcp:accept(Listen),  %% (7)
     gen_tcp:close(Listen),  %% (8)
     loop(Socket).
-
 loop(Socket) ->
     receive
 	{tcp, Socket, Bin} ->
@@ -66,8 +60,6 @@ loop(Socket) ->
 	    io:format("Server socket closed~n")
     end.
 
-
-
 error_test() ->
     spawn(fun() -> error_test_server() end),
     lib_misc:sleep(2000),
@@ -78,17 +70,14 @@ error_test() ->
 	Any ->
 	    io:format("Any=~p~n",[Any])
     end.
-
 error_test_server() ->
     {ok, Listen} = gen_tcp:listen(4321, [binary,{packet,2}]),
     {ok, Socket} = gen_tcp:accept(Listen),
     error_test_server_loop(Socket).
-
 error_test_server_loop(Socket) ->
     receive
 	{tcp, Socket, Data} ->
 	    io:format("received:~p~n",[Data]),
-	    atom_to_list(Data),
+	    _ = atom_to_list(Data),
 	    error_test_server_loop(Socket)
     end.
-

@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(test_mnesia).
 -import(lists, [foreach/2]).
@@ -15,14 +15,9 @@
 
 -include_lib("stdlib/include/qlc.hrl").
 
-
 -record(shop, {item, quantity, cost}).
 -record(cost, {name, price}).
-
-
 -record(design, {id, plan}).
-
-
 
 do_this_once() ->
     mnesia:create_schema([node()]),
@@ -32,12 +27,9 @@ do_this_once() ->
     mnesia:create_table(design, [{attributes, record_info(fields, design)}]),
     mnesia:stop().
 
-
 start() ->
     mnesia:start(),
     mnesia:wait_for_tables([shop,cost,design], 20000).
-
-
 
 %% SQL equivalent
 %%  SELECT * FROM shop;
@@ -46,16 +38,12 @@ demo(select_shop) ->
     do(qlc:q([X || X <- mnesia:table(shop)]));
 
 
-
-
 %% SQL equivalent
 %%  SELECT item, quantity FROM shop;
 
 demo(select_some) ->
     do(qlc:q([{X#shop.item, X#shop.quantity} || X <- mnesia:table(shop)]));
-
  
-
 
 %% SQL equivalent
 %%   SELECT shop.item FROM shop
@@ -65,8 +53,6 @@ demo(reorder) ->
     do(qlc:q([X#shop.item || X <- mnesia:table(shop),
 			     X#shop.quantity < 250
 				]));
-
-
 %% SQL equivalent
 %%   SELECT shop.item
 %%   FROM shop, cost 
@@ -82,14 +68,10 @@ demo(join) ->
 			     Y#cost.price < 2
 				])).
 
-
-
 do(Q) ->
     F = fun() -> qlc:e(Q) end,
     {atomic, Val} = mnesia:transaction(F),
     Val.
-
-
 
 
 example_tables() ->
@@ -107,8 +89,6 @@ example_tables() ->
      {cost, potato,  0.6}
     ].
 
-
-
 add_shop_item(Name, Quantity, Cost) ->
     Row = #shop{item=Name, quantity=Quantity, cost=Cost},
     F = fun() ->
@@ -116,16 +96,12 @@ add_shop_item(Name, Quantity, Cost) ->
 	end,
     mnesia:transaction(F).
 
-
-
 remove_shop_item(Item) ->
     Oid = {shop, Item},
     F = fun() ->
 		mnesia:delete(Oid)
 	end,
     mnesia:transaction(F).
-
-
 
 
 farmer(Nwant) ->
@@ -154,8 +130,6 @@ farmer(Nwant) ->
     mnesia:transaction(F).
 
 
-
-
 reset_tables() ->
     mnesia:clear_table(shop),
     mnesia:clear_table(cost),
@@ -163,8 +137,6 @@ reset_tables() ->
 		foreach(fun mnesia:write/1, example_tables())
 	end,
     mnesia:transaction(F).
-
-
 
 
 
@@ -190,10 +162,7 @@ add_plans() ->
 	end,
     mnesia:transaction(F).
 
-
-
 get_plan(PlanId) ->
     F = fun() -> mnesia:read({design, PlanId}) end,
     mnesia:transaction(F).
-
 

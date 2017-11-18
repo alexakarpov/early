@@ -1,17 +1,17 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(mp3_manager).
 -import(lists, [map/2, reverse/1]).
 -compile(export_all).
 
 start1() ->
-    Files = lib_files_find:files("/home/joe/music_keep", "*.mp3", true),
+    Files = lib_files_find:files("/Volumes/joe/piano_concertos", "*.mp3", true),
     V = map(fun handle/1, Files),
     lib_misc:dump("mp3data", V).
 
@@ -81,7 +81,7 @@ unicode_to_ascii(Bin) -> list_to_binary(uni_to_ascii1(binary_to_list(Bin))).
 uni_to_ascii1([X,_|Y]) -> [X|uni_to_ascii1(Y)];
 uni_to_ascii1([]) -> [].
 
-gather_frames(B) when size(B) < 10 ->
+gather_frames(B) when byte_size(B) < 10 ->
     [];
 gather_frames(<<0,0,0,0,_/binary>>) ->
     [];

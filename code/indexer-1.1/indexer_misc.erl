@@ -1,16 +1,15 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(indexer_misc).
 -export([files_in_dir/1, foreach_word_in_file/3, foreach_word_in_string/3, 
 	 mapreduce/4, search/3]).
 -import(lists, [filter/2, foreach/2, map/2, reverse/1]).
-
 
 %% evalute F(Word, Acc) -> Acc' for each word in the file File		  
 foreach_word_in_file(File, F, Acc) ->
@@ -18,8 +17,6 @@ foreach_word_in_file(File, F, Acc) ->
 	{ok, Bin} -> foreach_word_in_string(binary_to_list(Bin), F, Acc);
 	_         -> void
     end.
-
-
 
 foreach_word_in_string(Str, F, Acc) ->
     case get_word(Str) of
@@ -29,7 +26,6 @@ foreach_word_in_string(Str, F, Acc) ->
 	    Acc1 = F(Word, Acc),
 	    foreach_word_in_string(Str1, F, Acc1)
     end.
-
 
 isWordChar(X) when $A=< X, X=<$Z -> true;
 isWordChar(X) when $0=< X, X=<$9 -> true;

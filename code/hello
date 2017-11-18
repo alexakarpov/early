@@ -1,4 +1,4 @@
 #!/usr/bin/env escript
 
-main(_) ->
-    io:format("Hello world\n").
+main(Args) ->
+    io:format("Hello ~p~n",[Args]).

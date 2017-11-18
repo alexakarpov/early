@@ -1,12 +1,11 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
-
 -module(indexer_trigrams).
 -export([for_each_trigram_in_the_english_language/2,
 	 make_tables/0, timer_tests/0,
@@ -17,13 +16,9 @@
 	]).
 -import(lists, [reverse/1]).
 
-
-
 make_tables() ->  
     io:format("Building trigrams -- make take some time~n"),
     makeSet().
-
-
 
 make_ordered_set() -> makeAset(ordered_set, "trigramsOS.tab").
 makeSet()        -> makeAset(set, "trigramsS.tab").
@@ -37,15 +32,11 @@ makeAset(Type, FileName) ->
     ets:delete(Tab),
     Size.
 
-
-
 make_dict() ->
     D = dict:new(),
     F = fun(Str, Dict) -> dict:store(list_to_binary(Str),[],Dict) end,
     D1 = for_each_trigram_in_the_english_language(F, D),
     file:write_file("trigrams.dict", [term_to_binary(D1)]).
-
-
 
 timer_tests() ->
     time_lookup_set("Ordered Set", "trigramsOS.tab"),
@@ -74,13 +65,11 @@ time_lookup_dict() ->
 lookup_all_dict(Dict, L) ->
     lists:foreach(fun(Key) -> dict:find(Key, Dict) end, L).
 
-
 howManyTrigrams() ->
     F = fun(_, N) -> 1 + N  end,
     for_each_trigram_in_the_english_language(F, 0).
     
 %% An iterator that iterates through all trigrams in the language
-
 for_each_trigram_in_the_english_language(F, A0) ->
     {ok, Bin0} = file:read_file("../354984si.ngl.gz"),
     Bin = zlib:gunzip(Bin0),
@@ -109,12 +98,10 @@ scan_trigrams([X,Y,Z|T], F, A) ->
 scan_trigrams(_, _, A) ->
     A.
 
-
 %% access routines
 %%   open() -> Table
 %%   close(Table)
 %%   is_word(Table, String) -> Bool
-
 
 is_word(Tab, Str) -> is_word1(Tab, "\s" ++ Str ++ "\s").
 
@@ -139,4 +126,3 @@ open() ->
     I.
 
 close(Tab) -> ets:delete(Tab).
-

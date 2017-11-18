@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(tracer_test).
 
@@ -13,7 +13,6 @@
 
 %% www.otp.org/doc/man/ms_transform.html
 
-
 test1() ->
     dbg:tracer(),
     dbg:tpl(tracer_test,fib,'_',
@@ -21,17 +20,13 @@ test1() ->
     dbg:p(all,[c]),
     tracer_test:fib(4).
 
-
-
 test2() ->
     trace_module(tracer_test, fun() -> fib(4) end).
 
 fib(0) -> 1;
 fib(1) -> 1;
 fib(N) -> fib(N-1) + fib(N-2).
-
 	
-
 trace_module(Mod, StartFun) ->
     %% We'll spawn a process to do the tracing
     spawn(fun() -> trace_module1(Mod, StartFun) end).
@@ -74,6 +69,5 @@ trace_loop() ->
 	    io:format("Other = ~p~n",[Other]),
 	    trace_loop()
     end.
-
 
     

@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(vfs).
 
@@ -16,32 +16,28 @@ big_text() -> "./lib_misc.erl".
 
 big_media() -> "track030.mp3".
     
-
 %% @spec read_file(string()) -> {Compressed:bool(), int(), binary()}.
 read_file(File) ->
     {ok, Bin} = file:read_file(File),
     {Flag, Size, Data} = case is_media_file(File) of
 			     true ->
-				 {false, size(Bin), Bin};
+				 {false, byte_size(Bin), Bin};
 			     false ->
 				 Bin1 = term_to_binary(Bin, [compressed]),
-				 {true, size(Bin1), Bin1}
+				 {true, byte_size(Bin1), Bin1}
 			 end,
     Md5 = lib_md5:binAsBin(Data),
     {Flag, Size, Md5, Data}.
-
-
 
 is_media_file(File) ->
     member(downcase_str(filename:extension(File)),
 	   [".jpg", ".mp3", ".mpg"]).
 
-
 write_file_to_store(Pid, File, Md5, Compressed, Data) ->
     case rpc(Pid, {should_i_store, File, Md5}) of
 	{yes, Vsn} ->
 	    Data = term_to_binary({File,Vsn,Md5,Compressed,Data}),
-	    Size = size(Data) + 32,
+	    Size = byte_size(Data) + 32,
 	    case rpc(Pid, {need_some_space, File, Vsn, Md5, Size}) of
 		{yes, Handle, _Start} ->
 		    file:pwrite(Handle, 
@@ -115,7 +111,7 @@ new_vfs(FileName, MaxSize, MaxVersions) ->
 		       freeList=FreeList, 
 		       maxVersions = MaxVersions},
 	    B = term_to_binary(Env),
-	    Size = size(B),
+	    Size = byte_size(B),
 	    file:write_file(FileName,
 			    [<<16#01010101:32,
 			      Size:32,

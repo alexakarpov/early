@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(test_mapreduce).
 -compile(export_all).
@@ -23,6 +23,5 @@ wc_dir(Dir) ->
 generate_words(Pid, File) ->
     F = fun(Word) -> Pid ! {Word, 1} end,
     lib_misc:foreachWordInFile(File, F).
-
 count_words(Key, Vals, A) ->
     [{length(Vals), Key}|A].

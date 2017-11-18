@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(indexer_server).
 
@@ -57,7 +57,6 @@ search(Str)  -> gen_server:call(?MODULE, {search, Str}).
 %% Cold start is done ONCE *before* the server
 %% is started
 
-
 cold_start(OutputDir, SearchDirs) ->
     case file:list_dir(OutputDir) of
 	{ok, []} ->
@@ -71,7 +70,6 @@ cold_start(OutputDir, SearchDirs) ->
 	_ ->
 	    exit({eDirNotEmptyOrMissing, OutputDir})
     end.
-
 
 -record(env,{ets, cont, nextCP, outdir, stop=false}).
 

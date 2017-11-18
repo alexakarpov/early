@@ -1,16 +1,16 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(my_alarm_handler).
 -behaviour(gen_event).
 
 %% gen_event callbacks
--export([init/1, handle_event/2, handle_call/2, 
+-export([init/1, code_change/3, handle_event/2, handle_call/2, 
 	 handle_info/2, terminate/2]).
 
 %% init(Args) must return {ok, State}
@@ -29,7 +29,7 @@ handle_event(Event, N) ->
     {ok, N}.
     
 handle_call(_Request, N) -> Reply = N, {ok, Reply,  N}.
-
 handle_info(_Info, N)    -> {ok, N}.
 
 terminate(_Reason, _N)   -> ok.
+code_change(_OldVsn, State, _Extra) -> {ok, State}.

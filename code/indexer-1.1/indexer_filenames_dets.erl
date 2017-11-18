@@ -1,12 +1,11 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
-
 -module(indexer_filenames_dets).
 -export([open/1, close/0, test/0, filename2index/1, index2filename/1]).
 
@@ -27,8 +26,6 @@ open(File) ->
 
 close() -> dets:close(?MODULE).
 
-
-
 filename2index(FileName) when is_binary(FileName) ->
     case dets:lookup(?MODULE, FileName) of
 	[] ->
@@ -40,19 +37,14 @@ filename2index(FileName) when is_binary(FileName) ->
 	    N
     end.
 
-
-
 index2filename(Index) when is_integer(Index) ->
     case dets:lookup(?MODULE, Index) of
 	[]        -> error;
 	[{_,Bin}] -> Bin
     end.
 
-
-
 test() ->
     file:delete("./filenames.dets"),
     open("./filenames.dets"),
     F = lib_files_find:files(".", "*.erl", true),
     lists:foreach(fun(I) -> filename2index(list_to_binary(I)) end, F).
-

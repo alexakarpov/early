@@ -1,12 +1,13 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(prime_server).
+
 -behaviour(gen_server).
 
 -export([new_prime/1, start_link/0]).
@@ -26,6 +27,7 @@ init([]) ->
     %% Note we must set trap_exit = true if we 
     %% want terminate/2 to be called when the application
     %% is stopped
+	
     process_flag(trap_exit, true),
     io:format("~p starting~n",[?MODULE]),
     {ok, 0}.

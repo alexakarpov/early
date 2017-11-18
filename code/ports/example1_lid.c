@@ -1,3 +1,11 @@
+/***
+ * Excerpted from "Programming Erlang, Second Edition",
+ * published by The Pragmatic Bookshelf.
+ * Copyrights apply to this code. It may not be used to create training material, 
+ * courses, books, articles, and the like. Contact us if you are in doubt.
+ * We make no guarantees that this code is fit for any purpose. 
+ * Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
+***/
 /* example1_lid.c */
 
 #include <stdio.h>
@@ -19,7 +27,8 @@ static void example_drv_stop(ErlDrvData handle)
     driver_free((char*)handle);
 }
 
-static void example_drv_output(ErlDrvData handle, char *buff, int bufflen)
+static void example_drv_output(ErlDrvData handle, char *buff, 
+			       ErlDrvSizeT bufflen)
 {
     example_data* d = (example_data*)handle;
     char fn = buff[0], arg = buff[1], res;
@@ -31,7 +40,7 @@ static void example_drv_output(ErlDrvData handle, char *buff, int bufflen)
     driver_output(d->port, &res, 1);
 }
 
-ErlDrvEntry example_driver_entry = {
+static ErlDrvEntry example_driver_entry = {
     NULL,               /* F_PTR init, N/A */
     example_drv_start,  /* L_PTR start, called when port is opened */
     example_drv_stop,   /* F_PTR stop, called when port is closed */
@@ -45,7 +54,18 @@ ErlDrvEntry example_driver_entry = {
     NULL,               /* F_PTR finish, called when unloaded */
     NULL,               /* F_PTR control, port_command callback */
     NULL,               /* F_PTR timeout, reserved */
-    NULL                /* F_PTR outputv, reserved */
+    NULL,               /* F_PTR outputv, reserved */
+    NULL,               /* process, */
+    NULL,                             /* ready_async */
+    NULL,                             /* flush */
+    NULL,                             /* call */
+    NULL,                             /* event */
+    ERL_DRV_EXTENDED_MARKER,          /* ERL_DRV_EXTENDED_MARKER */
+    ERL_DRV_EXTENDED_MAJOR_VERSION,   /* ERL_DRV_EXTENDED_MAJOR_VERSION */
+    ERL_DRV_EXTENDED_MINOR_VERSION,   /* ERL_DRV_EXTENDED_MINOR_VERSION */
+    ERL_DRV_FLAG_USE_PORT_LOCKING,     /* ERL_DRV_FLAGs */
+    NULL,
+    NULL
 };
 
 DRIVER_INIT(example_drv) /* must match name in driver_entry */

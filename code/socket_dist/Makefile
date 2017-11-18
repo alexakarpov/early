@@ -11,7 +11,7 @@ MODS =  any_apply \
         chat_client chat_group chat_server\
 	io_widget kvs\
 	lib_chan lib_chan_mm lib_chan_cs lib_chan_test\
-        lib_chan_auth \
+        lib_chan_auth lib_md5\
         mod_echo mod_math mod_chat_controller mod_name_server\
         test1 test_name_server mod_srpc
 

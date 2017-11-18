@@ -1,18 +1,16 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(lib_chan_cs).
 %% cs stands for client_server
-
 -export([start_raw_server/4, start_raw_client/3]).
 -export([stop/1]).
 -export([children/1]).
-
 
 %% start_raw_server(Port, Fun, Max, PacketLength)
 %%   This server accepts up to Max connections on Port
@@ -94,8 +92,6 @@ cold_start(Master, Port, Fun, Max, PacketLength) ->
 	Error ->
 	    Master ! {self(), Error}
     end.
-
-
 socket_loop(Listen, New, Active, Fun, Max) ->
     receive
 	{istarted, New} ->
@@ -114,7 +110,6 @@ socket_loop(Listen, New, Active, Fun, Max) ->
 	_Other ->
 	    socket_loop(Listen,New,Active,Fun,Max)
     end.
-
 
 possibly_start_another(New, Listen, Active, Fun, Max) 
   when pid(New) ->

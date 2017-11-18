@@ -1,19 +1,17 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(phofs).
 -export([mapreduce/4]).
-
 -import(lists, [foreach/2]).
 
 %% F1(Pid, X) -> sends {Key,Val} messages to Pid
 %% F2(Key, [Val], AccIn) -> AccOut
-
 mapreduce(F1, F2, Acc0, L) ->
     S = self(),
     Pid = spawn(fun() -> reduce(S, F1, F2, Acc0, L) end),
@@ -41,7 +39,7 @@ reduce(Parent, F1, F2, Acc0, L) ->
 %% collect_replies(N, Dict)
 %%     collect and merge {Key, Value} messages from N processes.
 %%     When N processes have terminated return a dictionary
-%%     of {Key, [Value]} pairs
+%%     of {Key, [Value]} tuples
 
 collect_replies(0, Dict) ->
     Dict;

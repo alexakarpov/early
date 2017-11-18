@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(chat_client).
 
@@ -14,10 +14,8 @@
 
 -export([start/0, test/0, connect/5]).
 
-
 start() -> 
     connect("localhost", 2223, "AsDT67aQ", "general", "joe").
-
 
 test() ->
     connect("localhost", 2223, "AsDT67aQ", "general", "joe"),
@@ -25,7 +23,6 @@ test() ->
     connect("localhost", 2223, "AsDT67aQ", "general", "jim"),
     connect("localhost", 2223, "AsDT67aQ", "general", "sue").
 	   
-
 connect(Host, Port, HostPsw, Group, Nick) ->
     spawn(fun() -> handler(Host, Port, HostPsw, Group, Nick) end).
 				 
@@ -38,8 +35,6 @@ handler(Host, Port, HostPsw, Group, Nick) ->
     set_handler(Widget, fun parse_command/1),
     start_connector(Host, Port, HostPsw),    
     disconnected(Widget, Group, Nick).
-
-
 
 disconnected(Widget, Group, Nick) ->
     receive
@@ -57,8 +52,6 @@ disconnected(Widget, Group, Nick) ->
 	    disconnected(Widget, Group, Nick)
     end.
 
-
-
 wait_login_response(Widget, MM) ->
     receive
 	{chan, MM, ack} ->
@@ -67,8 +60,6 @@ wait_login_response(Widget, MM) ->
 	    io:format("chat_client login unexpected:~p~n",[Other]),
 	    wait_login_response(Widget, MM)
     end. 
-
-
 
 active(Widget, MM) ->
      receive
@@ -87,8 +78,6 @@ active(Widget, MM) ->
 	     active(Widget, MM)
      end. 
 
-
-
 start_connector(Host, Port, Pwd) ->
     S = self(),
     spawn_link(fun() -> try_to_connect(S, Host, Port, Pwd) end).
@@ -105,7 +94,6 @@ try_to_connect(Parent, Host, Port, Pwd) ->
 	    Parent ! {connected, MM},
 	    exit(connectorFinished)
     end.
-
 
 sleep(T) ->
     receive

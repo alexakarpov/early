@@ -1,12 +1,11 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
-
 -module(chat_group).
 -import(lib_chan_mm, [send/2, controller/2]).
 -import(lists, [foreach/2, reverse/2]).
@@ -20,13 +19,9 @@ start(C, Nick) ->
     self() ! {chan, C, {relay, Nick, "I'm starting the group"}},
     group_controller([{C,Nick}]).
 
-
-
 delete(Pid, [{Pid,Nick}|T], L) -> {Nick, reverse(T, L)};
 delete(Pid, [H|T], L)          -> delete(Pid, T, [H|L]);
 delete(_, [], L)               -> {"????", L}.
-
-
 
 group_controller([]) ->
     exit(allGone);
@@ -48,4 +43,3 @@ group_controller(L) ->
 	    io:format("group controller received Msg=~p~n", [Any]),
 	    group_controller(L)
     end.
-

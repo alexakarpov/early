@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(lib_misc).
 
@@ -30,8 +30,8 @@
 	 keep_alive/2,
 	 glurk/2,
 	 lookup/2,
-	 odds_and_evens/1,
-	 odds_and_evens_acc/1,
+	 odds_and_evens1/1,
+	 odds_and_evens2/1,
 	 on_exit/2,
 	 make_global/2,
 	 make_test_strings/1,
@@ -81,18 +81,13 @@
 -import(lists, [all/2, any/2, filter/2, reverse/1, reverse/2,
 		foreach/2, map/2, member/2, sort/1]).
 
-
 -define(NYI(X),(begin 
 		    io:format("*** NYI ~p ~p ~p~n",[?MODULE, ?LINE, X]),
 		    exit(nyi) 
 		end)).
 
-
-
 glurk(X, Y) ->
     ?NYI({glurk, X, Y}).
-
-
 
 
 
@@ -105,15 +100,11 @@ file_size_and_type(File) ->
 	    error
     end.
 
-
-
 ls(Dir) ->
     {ok, L} = file:list_dir(Dir),
-    map(fun(I) -> {I, file_size_and_type(I)} end, sort(L)).
-
+    lists:map(fun(I) -> {I, file_size_and_type(I)} end, lists:sort(L)).
     
 		
-
 
 consult(File) ->
     case file:open(File, read) of
@@ -124,7 +115,6 @@ consult(File) ->
 	{error, Why} ->
 	    {error, Why}
     end.
-
 consult1(S) ->
     case io:read(S, '') of
 	{ok, Term} -> [Term|consult1(S)];
@@ -132,15 +122,12 @@ consult1(S) ->
 	Error      -> Error
     end.
 
-
-
 dump(File, Term) ->
     Out = File ++ ".tmp",
     io:format("** dumping to ~s~n",[Out]),
     {ok, S} = file:open(Out, [write]),
     io:format(S, "~p.~n",[Term]), 
     file:close(S).
-
 
 partition(F, L) -> partition(F, L, [], []).
 
@@ -169,14 +156,11 @@ is_prefix(_, _)          -> false.
 first([_])   -> [];
 first([H|T]) -> [H|first(T)].
 
-
 sleep(T) ->
     receive
     after T ->
        true
     end.
-
-
 
 flush_buffer() ->
     receive
@@ -185,8 +169,6 @@ flush_buffer() ->
     after 0 ->
 	true
     end.
-
-
 
 priority_receive() ->
     receive
@@ -198,7 +180,6 @@ priority_receive() ->
 		Any
 	end
     end.
-
 
 duplicates(X) ->  find_duplicates(sort(X), []).
 
@@ -280,7 +261,7 @@ have_common_prefix(L) ->
     end.
 
 is_empty_list([]) ->	true;
-is_empty_list(X) when list(X) -> false.
+is_empty_list(X) when is_list(X) -> false.
 
 skip_blanks([$\s|T]) -> skip_blanks(T);
 skip_blanks(X)       -> X.
@@ -438,15 +419,12 @@ ndots([$.|T]) -> 1 + ndots(T);
 ndots([_|T])  -> ndots(T);
 ndots([])     -> 0.
 
-
 term2file(File, Term) ->
     file:write_file(File, term_to_binary(Term)).
 
 file2term(File) ->
     {ok, Bin} = file:read_file(File),
     binary_to_term(Bin).
-
-
 
 string2term(Str) ->
     {ok,Tokens,_} = erl_scan:string(Str ++ "."),
@@ -456,14 +434,10 @@ string2term(Str) ->
 term2string(Term) ->
     lists:flatten(io_lib:format("~p",[Term])).
 
-
-
 downcase_str(Str) -> map(fun downcase_char/1, Str).
 
 downcase_char(X) when $A =< X, X =< $Z -> X+ $a - $A;
 downcase_char(X)                       -> X.
-
-
 
 string2value(Str) ->
     {ok, Tokens, _} = erl_scan:string(Str ++ "."),
@@ -471,8 +445,6 @@ string2value(Str) ->
     Bindings = erl_eval:new_bindings(),
     {value, Value, _} = erl_eval:exprs(Exprs, Bindings),
     Value.
-
-
 
 mini_shell() ->
     mini_shell(erl_eval:new_bindings()).
@@ -491,9 +463,7 @@ string2value(Str, Bindings0) ->
     {ok, Exprs} = erl_parse:parse_exprs(Tokens),
     {value, Value, Bindings1} = erl_eval:exprs(Exprs, Bindings0),
     {Value, Bindings1}.
-
 	    
-
 eval_file(File) ->
     {ok, S} = file:open(File, [read]),
     Vals = eval_file(S, 1, erl_eval:new_bindings()),
@@ -509,19 +479,13 @@ eval_file(S, Line, B0) ->
 	    []
     end.
 
-
-
 remove_leading_whitespace([$\n|T]) -> remove_leading_whitespace(T);
 remove_leading_whitespace([$\s|T]) -> remove_leading_whitespace(T);
 remove_leading_whitespace([$\t|T]) -> remove_leading_whitespace(T);
 remove_leading_whitespace(X) -> X.
 
-
-
 remove_trailing_whitespace(X) ->
     reverse(remove_leading_whitespace(reverse(X))).
-
-
 
 safe(Fun) ->
     case (catch Fun()) of
@@ -531,14 +495,10 @@ safe(Fun) ->
 	    Other
     end.
 
-
-
 too_hot() ->
     event_handler:event(errors, too_hot).
 
-
 %% spawn_monitor behaves just like spawn
-
 
 spawn_monitor(_, false, Fun) ->
     spawn(Fun);
@@ -549,13 +509,13 @@ starter(Term, Fun) ->
     S = self(),
     io:format("process:~p started at:~p ~p~n",
 	      [self(), erlang:now(), Term]),
-    Monitor = spawn_link(fun() -> monitor(Term, S) end),
+    Monitor = spawn_link(fun() -> amonitor(Term, S) end),
     receive
 	{Monitor, ready} ->
 	    Fun()
     end.
 
-monitor(Term, Parent) ->
+amonitor(Term, Parent) ->
     process_flag(trap_exit, true),
     Parent ! {self(), ready},
     receive
@@ -563,17 +523,13 @@ monitor(Term, Parent) ->
 	    io:format("process:~p dies at:~p ~p reason:~p~n",
 		      [self(), erlang:now(), Term, Why])
     end.
-
-
 keep_alive(Name, Fun) ->
     register(Name, Pid = spawn(Fun)),
     on_exit(Pid, fun(_Why) -> keep_alive(Name, Fun) end).
 
-
 %% make_global(Name, Fun) checks if there is a global process with the
 %% registered name Name. If there is no process it spawns a process to
 %% evaluate Fun() and registers it with the name Name.
-
 
 
 make_global(Name, Fun) ->
@@ -591,25 +547,20 @@ make_global(Parent, Name, Fun) ->
     end,
     Parent ! {self(), ok}.
 
-
 %% on_exit(Pid, Fun) links to Pid. If Pid dies with reason Why then
 %% Fun(Why) is evaluated:
 
-
 on_exit(Pid, Fun) ->
     spawn(fun() -> 
-		  process_flag(trap_exit, true), %% <label id="code.onexit1"/>
-		  link(Pid),                     %% <label id="code.onexit2"/>
+		  Ref = monitor(process, Pid),     %% <label id="code.onexit2"/>
 		  receive
-		      {'EXIT', Pid, Why} ->      %% <label id="code.onexit3"/>
+		      {'DOWN', Ref, process, Pid, Why} ->      %% <label id="code.onexit3"/>
 			  Fun(Why)   %% <label id="code.onexit4"/>
 		  end
 	  end).
 
-
 %% every(Pid, Time, Fun) links to Pid then every Time Fun() is
 %% evaluated. If Pid exits, this process stops.
-
 
 every(Pid, Time, Fun) ->
     spawn(fun() ->
@@ -627,12 +578,8 @@ every_loop(Pid, Time, Fun) ->
 	    every_loop(Pid, Time, Fun)
     end.
 
-
-
 for(Max, Max, F) -> [F(Max)];
 for(I, Max, F)   -> [F(I)|for(I+1, Max, F)].
-
-
 
 qsort([]) -> [];
 qsort([Pivot|T]) ->
@@ -640,12 +587,8 @@ qsort([Pivot|T]) ->
 	++ [Pivot] ++
 	qsort([X || X <- T, X >= Pivot]).
 
-
-
 perms([]) -> [[]];
 perms(L)  -> [[H|T] || H <- L, T <- perms(L--[H])].
-
-
 
 pythag(N) ->
     [ {A,B,C} ||
@@ -655,8 +598,6 @@ pythag(N) ->
         A+B+C =< N,
         A*A+B*B =:= C*C 
     ].
-
-
 
 extract_attribute(File, Key) ->
     case beam_lib:chunks(File,[attributes]) of
@@ -669,13 +610,10 @@ lookup(Key, [{Key,Val}|_]) -> {ok, Val};
 lookup(Key, [_|T])         -> lookup(Key, T);
 lookup(_, [])              -> error.
 
-
-
 unconsult(File, L) ->
     {ok, S} = file:open(File, write),
     lists:foreach(fun(X) -> io:format(S, "~p.~n",[X]) end, L),
     file:close(S).
-
 
 random_seed() ->
     {_,_,X} = erlang:now(),
@@ -685,15 +623,12 @@ random_seed() ->
     S1 = S * X rem 32767,
     put(random_seed, {H1,M1,S1}).
 
-
-odds_and_evens(L) ->
+odds_and_evens1(L) ->
     Odds  = [X || X <- L, (X rem 2) =:= 1], 
     Evens = [X || X <- L, (X rem 2) =:= 0],
     {Odds, Evens}.
 
-
-
-odds_and_evens_acc(L) ->
+odds_and_evens2(L) ->
     odds_and_evens_acc(L, [], []).
 
 odds_and_evens_acc([H|T], Odds, Evens) ->
@@ -704,21 +639,15 @@ odds_and_evens_acc([H|T], Odds, Evens) ->
 odds_and_evens_acc([], Odds, Evens) ->
     {Odds, Evens}.
 
-
-
 sum(L) -> sum(L, 0).
 
 sum([], N)    -> N;
 sum([H|T], N) -> sum(T, H+N).
 
-
-
 sqrt(X) when X < 0 ->    
-    erlang:error({squareRootNegativeArgument, X});
+    error({squareRootNegativeArgument, X});
 sqrt(X) ->
     math:sqrt(X).
-
-
 
 pmap(F, L) -> 
     S = self(),
@@ -733,15 +662,12 @@ pmap(F, L) ->
 
 do_f(Parent, Ref, F, I) ->					    
     Parent ! {self(), Ref, (catch F(I))}.
-
 gather([Pid|T], Ref) ->
     receive
 	{Pid, Ref, Ret} -> [Ret|gather(T, Ref)]
     end;
 gather([], _) ->
     [].
-
-
 
 pmap1(F, L) -> 
     S = self(),
@@ -762,16 +688,12 @@ gather1(N, Ref, L) ->
     end.
 
 
-
-
 %% evalute F(Word) for each word in the file File		  
 foreachWordInFile(File, F) ->
     case file:read_file(File) of
 	{ok, Bin} -> foreachWordInString(binary_to_list(Bin), F);
 	_         -> void
     end.
-
-
 
 foreachWordInString(Str, F) ->
     case get_word(Str) of
@@ -781,7 +703,6 @@ foreachWordInString(Str, F) ->
 	    F(Word),
 	    foreachWordInString(Str1, F)
     end.
-
 
 isWordChar(X) when $A=< X, X=<$Z -> true;
 isWordChar(X) when $0=< X, X=<$9 -> true;
@@ -804,7 +725,6 @@ collect_word([H|T]=All, L) ->
 collect_word([], L) ->
     {reverse(L), []}.
 
-
 deliberate_error(A) ->
     bad_function(A, 12),
     lists:reverse(A).
@@ -813,8 +733,5 @@ bad_function(A, _) ->
     {ok, Bin} = file:open({abc,123}, A),
     binary_to_list(Bin).
 
-
-
 deliberate_error1(A) ->
     bad_function(A, 12).
-

@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(mp3_sync).
 
@@ -18,7 +18,6 @@
 %% Start searching at byte N in Bin
 %% and look for the next word K where we
 %% are synced - require three in a row to achieve sync
-
 
 find_sync(Bin, N) ->
     case is_header(N, Bin) of
@@ -37,9 +36,7 @@ find_sync(Bin, N) ->
 	error ->
 	    find_sync(Bin, N+1)
     end.
-
 %% is_header(N, Bin) -> {ok, FrameLength, Info} | error.
-
 
 is_header(N, Bin) ->
     unpack_header(get_word(N, Bin)).
@@ -53,8 +50,6 @@ unpack_header(X) ->
     catch
 	_:_ -> error
     end.
-
-
 
 decode_header(<<2#11111111111:11,B:2,C:2,_D:1,E:4,F:2,G:1,Bits:9>>) ->
     Vsn = case B of
@@ -82,7 +77,6 @@ decode_header(<<2#11111111111:11,B:2,C:2,_D:1,E:4,F:2,G:1,Bits:9>>) ->
     end;
 decode_header(_) ->
     exit(badHeader).
-
     
 bitrate(_,_,15) -> exit(1);
 bitrate(1,1,E) ->		      

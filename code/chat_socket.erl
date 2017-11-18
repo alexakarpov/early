@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(chat_socket).
 
@@ -24,7 +24,6 @@
 %% Secret = none | string
 %%
 %% Who = the person who owns the server
-
 
 start_chat_server(Who, Secret) ->
     lib_auth_cs:start_server(3030, 
@@ -47,9 +46,7 @@ call(Host, From, Secret) ->
 				  {yes, client}).
 
 
-
 %%----------------------------------------------------------------------
-
 chat_server(Client, Me) ->
     %% when we are started popup an I/O widget
     Widget = io_widget:start(self()),
@@ -76,8 +73,6 @@ relay(Pid, Widget, Who) ->
 	    relay(Pid, Widget, Who)
     end.
 
-
-
 chat_client(Server, {_Host, From}) ->
     Widget = io_widget:start(self()),
     Server ! {msg, {hello, From}},
@@ -86,5 +81,4 @@ chat_client(Server, {_Host, From}) ->
 	    io_widget:set_title(Widget, Me),
 	    relay(Server, Widget, From)
     end.
-
     

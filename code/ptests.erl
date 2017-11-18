@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(ptests).
 -export([tests/1, fib/1]).
@@ -23,7 +23,6 @@ run_tests(N, Nsched) ->
 	    io:format("~p.~n",[{Nsched, Val}]),
 	    run_tests(N+1, Nsched)
     end.
-
 test(1) ->
     %% Make 100 lists 
     %%   Each list contains 1000 random integers

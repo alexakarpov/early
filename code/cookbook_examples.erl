@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(cookbook_examples).
 
@@ -15,26 +15,19 @@
 -compile(export_all).
 -import(lists, [foreach/2, map/2, reverse/1]).
 
-
 time(Fun) ->
     timer:tc(lib_cookbook, eval_fun, [Fun]).
 
 eval_fun(Fun) -> Fun().
 
-
-
 fib1(0) -> 1;
 fib1(1) -> 1;
 fib1(N) -> fib1(N-1) + fib1(N-2).
-
-
 
 fib2(N) -> fib2(N, 1, 1).
 
 fib2(0, A, _) -> A;
 fib2(N, A, B) -> fib2(N-1, B, A+B).
-
-
 
 extract_people(Tree) ->
     extract_people(Tree, []).
@@ -49,8 +42,6 @@ extract_people(Tuple, L) when tuple(Tuple) ->
 extract_people(_, L) ->
     L.
 
-
-
 swap_names({person,First,Last}) ->
     {person, Last, First};
 swap_names([H|T]) ->
@@ -61,8 +52,6 @@ swap_names(Tuple) when tuple(Tuple) ->
     list_to_tuple(L2);
 swap_names(X) ->
     X.
-
-
 
 shopping_list() ->
     [["Eggs", 24, 1.2],
@@ -81,7 +70,6 @@ show_format(Format) ->
     foreach(fun(Items) -> io:format(Format, Items) end, 
 	    shopping_list()),
     io:format("~n").
-
 		    
 
 test_data1() ->
@@ -90,7 +78,6 @@ test_data1() ->
 	   def, {g,h,{i, [a, {person,"Zolab","Zinkeldoffle"},q]}}}]}.
 
     
-
 binary_file_access() ->
     File = "test.bin",
     file:write_file(File, [<<"12345abcde">>]),
@@ -104,4 +91,3 @@ binary_file_access() ->
     {{initial,Initial}, 
      {b1,B1}, 
      {first,First}, {last,Last}, {final,Final}}.
-

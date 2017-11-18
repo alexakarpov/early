@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(lib_chan).
 -export([cast/2, start_server/0, start_server/1,
@@ -39,11 +39,9 @@ start_server(ConfigFile) ->
     end.
 
 %% check_terms() -> [Error]
-
 check_terms(ConfigData) ->
     L = map(fun check_term/1, ConfigData),
-    [X || {error, X} <- L].
-		    
+    [X || {error, X} <- L].	    
 check_term({port, P}) when is_integer(P)     -> ok;
 check_term({service,_,password,_,mfa,_,_,_}) -> ok;
 check_term(X) -> {error, {badTerm, X}}.
@@ -67,6 +65,7 @@ start_port_instance(Socket, ConfigData) ->
     %% This is where the low-level connection is handled
     %% We must become a middle man
     %% But first we spawn a connection handler
+	
     S = self(),
     Controller = spawn_link(fun() -> start_erl_port_server(S, ConfigData) end),
     lib_chan_mm:loop(Socket, Controller).
@@ -193,7 +192,6 @@ wait_close(MM) ->
 	    io:format("**error lib_chan~n"),
 	    true
     end.
-
 disconnect(MM) -> close(MM).
 
 rpc(MM, Q) ->

@@ -1,10 +1,10 @@
 %% ---
-%%  Excerpted from "Programming Erlang",
+%%  Excerpted from "Programming Erlang, Second Edition",
 %%  published by The Pragmatic Bookshelf.
 %%  Copyrights apply to this code. It may not be used to create training material, 
 %%  courses, books, articles, and the like. Contact us if you are in doubt.
 %%  We make no guarantees that this code is fit for any purpose. 
-%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang for more book information.
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(edemo2).
 -export([start/2]).
@@ -29,13 +29,11 @@ b(A, Bool) ->
     process_flag(trap_exit, Bool),
     link(A),
     wait(b).
-
 c(B, M) ->
     process_flag(trap_exit, true),
     link(B),
     exit(B, M),
     wait(c).
-
 
 wait(Prog) ->
     receive
