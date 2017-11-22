@@ -1,5 +1,5 @@
 -module(play).
--export([unconsult/2, file_size_and_type/1, should_recompile/1, ls/1]).
+-compile(export_all).
 -include_lib("kernel/include/file.hrl").
 
 unconsult(File, L) ->
@@ -33,4 +33,30 @@ should_recompile(Mod) ->
             end;
         {error, Why} ->
             {error, Why}
+    end.
+
+get_md5(File) ->
+    {ok, S} = file:open(File, read),
+    Context = erlang:md5_init(),
+    FinalCtxt = get_md5_rec(S, Context),
+    get_md5_hex_str(erlang:md5_final(FinalCtxt)).
+
+get_md5_rec(Dev, Ctxt) ->
+    case file:read(Dev, 1000000) of
+        {ok, Bin} ->
+            NewCtxt = erlang:md5_update(Ctxt, Bin),
+            get_md5_rec(Dev, NewCtxt);
+        eof -> Ctxt
+    end.
+
+get_md5_hex_str(Str) ->
+    X = erlang:md5(Str),
+    [begin if N < 10 -> 48 + N; true -> 87 + N end end || <<N:4>> <= X].
+
+read_chunks(Dev, Bytes) ->
+    case file:read(Dev, Bytes) of
+        {ok, L} ->
+            io:format("Read ~p~n", [L]),
+            read_chunks(Dev, Bytes);
+        eof -> done
     end.
