@@ -39,7 +39,7 @@ get_md5(File) ->
     {ok, S} = file:open(File, read),
     Context = erlang:md5_init(),
     FinalCtxt = get_md5_rec(S, Context),
-    get_md5_hex_str(erlang:md5_final(FinalCtxt)).
+    lists:flatten([io_lib:format("~2.16.0b", [B]) || <<B>> <= erlang:md5_final(FinalCtxt)]).
 
 get_md5_rec(Dev, Ctxt) ->
     case file:read(Dev, 1000000) of
@@ -49,14 +49,5 @@ get_md5_rec(Dev, Ctxt) ->
         eof -> Ctxt
     end.
 
-get_md5_hex_str(Str) ->
-    X = erlang:md5(Str),
-    [begin if N < 10 -> 48 + N; true -> 87 + N end end || <<N:4>> <= X].
-
-read_chunks(Dev, Bytes) ->
-    case file:read(Dev, Bytes) of
-        {ok, L} ->
-            io:format("Read ~p~n", [L]),
-            read_chunks(Dev, Bytes);
-        eof -> done
-    end.
+hex(X) ->
+    element(X+1, {$0, $1, $2, $3, $4, $5, $6, $7, $8, $9, $a, $b, $c, $d, $e, $f}).
