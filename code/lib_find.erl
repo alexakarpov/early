@@ -26,7 +26,7 @@ find_files([File|T], Dir, Reg, Recursive, Fun, Acc0) ->
     FullName = filename:join([Dir,File]),
     case file_type(FullName) of
 	regular ->
-	    case re:run(FullName, Reg, [{capture,none}]) of
+	    case re:run(FullName, Reg, [unicode, {capture,none}]) of
 		match  -> 
 		    Acc = Fun(FullName, Acc0),
 		    find_files(T, Dir, Reg, Recursive, Fun, Acc);
