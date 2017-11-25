@@ -1,12 +1,23 @@
 -module(play).
 -compile(export_all).
 -include_lib("kernel/include/file.hrl").
+-import(lib_find, [files/3]).
 
 unconsult(File, L) ->
-    {ok, S} = file:open(File, write),
-    lists:foreach(fun(X) -> io:format(S, "~p.~n", [X]) end,
-                  L),
-    file:close(S).
+    case file:open(File, [write]) of
+        {ok, S} ->
+            lists:foreach(fun(X) -> io:format(S, "~p.~n", [X]) end,
+                          L),
+            file:close(S);
+        {error, Why} ->
+            Why
+    end.
+
+open_test(File) ->
+    case file:open(File, [read]) of
+        {ok, S} -> file:close(S);
+        {error, Why} -> Why
+    end.
 
 file_size_and_type(File) ->
     case file:read_file_info(File) of
@@ -18,7 +29,8 @@ file_size_and_type(File) ->
 ls(Dir) ->
     {ok, L} = file:list_dir(Dir),
     lists:map(fun(I) ->
-                       {I, file_size_and_type(I)} end, lists:sort(L)).
+                       {I, file_size_and_type(I)} end,
+              lists:sort(L)).
 
 should_recompile(Mod) ->
     case file:read_file_info(Mod++".erl") of
@@ -36,7 +48,7 @@ should_recompile(Mod) ->
     end.
 
 get_md5(File) ->
-    {ok, S} = file:open(File, read),
+    {ok, S} = file:open(File, [read]),
     Context = erlang:md5_init(),
     FinalCtxt = get_md5_rec(S, Context),
     lists:flatten([io_lib:format("~2.16.0b", [B]) || <<B>> <= erlang:md5_final(FinalCtxt)]).
@@ -49,5 +61,11 @@ get_md5_rec(Dev, Ctxt) ->
         eof -> Ctxt
     end.
 
-hex(X) ->
-    element(X+1, {$0, $1, $2, $3, $4, $5, $6, $7, $8, $9, $a, $b, $c, $d, $e, $f}).
+pictures_md5s(Dir) ->
+    L = [{P, get_md5(P)} || P <- files(Dir, "*.jpg", true)],
+    maps:from_list(L).
+
+
+%% dedupe([], Acc) ->
+%%     Acc;
+%% dedupe(L, Acc) ->
