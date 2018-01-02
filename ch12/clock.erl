@@ -1,18 +1,26 @@
 -module(clock).
--export([start/2, stop/0]).
+-export([start/2, stop/0, hi/0]).
 
 start(Time, Fun) ->
-    register(clock, spawn(fun() -> tick(Time, Fun) end)).
+    AFun = fun() -> tick(Time, Fun) end,
+    Pid = spawn(AFun),
+    register(clock, Pid ),
+    Pid.
 
-stop() ->
-    clock ! stop.
+stop() -> clock ! stop.
 
 tick(Time, Fun) ->
     receive
         stop ->
-            void
+            void;
+        die ->
+            io:format ("I'm killed!~n"),
+            exit(dead)
     after Time ->
             Fun(),
             %%io:format("tock~n"),
             tick(Time, Fun)
     end.
+
+hi() ->
+    io:format("ohai from ~p~n", [?MODULE]).
