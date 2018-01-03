@@ -62,10 +62,7 @@ get_md5_rec(Dev, Ctxt) ->
     end.
 
 pictures_md5s(Dir) ->
-    L = [{P, get_md5(P)} || P <- files(Dir, "*.jpg", true)],
+    Ps = files(Dir, "*.jpg", true),
+    io:format("Found ~p files~n", [length(Ps)]),
+    L = [{P, get_md5(P)} || P <- Ps ],
     maps:from_list(L).
-
-
-%% dedupe([], Acc) ->
-%%     Acc;
-%% dedupe(L, Acc) ->
