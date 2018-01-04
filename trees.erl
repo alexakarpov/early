@@ -1,4 +1,5 @@
 -module(trees).
+-include_lib("eunit/include/eunit.hrl").
 -compile(export_all).
 
 empty() ->
@@ -22,3 +23,6 @@ lookup(Key, {node, {NodeKey, _, Smaller, _}}) when Key < NodeKey ->
     lookup(Key, Smaller);
 lookup(Key, {node, {_, _, _, Larger}}) ->
     lookup(Key, Larger).
+
+dummy_test() ->
+    ?assert(2+2 =:= 4).
