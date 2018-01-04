@@ -48,9 +48,14 @@ should_recompile(Mod) ->
     end.
 
 get_md5(File) ->
+    io:format("Reading ~p~n", [File]),
     {ok, S} = file:open(File, [read]),
     Context = erlang:md5_init(),
     FinalCtxt = get_md5_rec(S, Context),
+    case file:close(S) of
+        ok -> void;
+        {error, Why} -> io:format ("Errored with ~p~n", [Why])
+    end,
     lists:flatten([io_lib:format("~2.16.0b", [B]) || <<B>> <= erlang:md5_final(FinalCtxt)]).
 
 get_md5_rec(Dev, Ctxt) ->
@@ -62,7 +67,25 @@ get_md5_rec(Dev, Ctxt) ->
     end.
 
 pictures_md5s(Dir) ->
-    Ps = files(Dir, "*.jpg", true),
+    Ps = files(Dir, "*.txt", true),
     io:format("Found ~p files~n", [length(Ps)]),
     L = [{P, get_md5(P)} || P <- Ps ],
     maps:from_list(L).
+
+cache_loop (Cache) ->
+    receive
+        {From, md5, FileName} ->
+            From ! {self(),  maps:get (FileName, Cache, noent)},
+            cache_loop (Cache);
+        {From, upd, FileName} ->
+            Updated = maps:update (FileName, get_md5(FileName), Cache),            
+            From ! {self(), maps:get (FileName, Cache)},
+            cache_loop (Updated);
+        {From, list} ->
+            From ! {self (),  Cache},
+            cache_loop (Cache)
+    end.
+
+build_cache (Dir) ->
+    Cache = pictures_md5s (Dir),
+    spawn (?MODULE,  cache_loop, [Cache]).
