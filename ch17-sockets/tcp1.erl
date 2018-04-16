@@ -3,7 +3,7 @@
 -define(Port, 2345).
 
 nano_get_url() ->
-    nano_get_url("yyz.alexakarpov.xyz").
+    nano_get_url("tiny-tor.alexakarpov.xyz").
 
 nano_get_url(Host) ->
     {ok, Socket} = gen_tcp:connect(Host, 80, [binary, {packet, 0}]),
@@ -38,6 +38,7 @@ nano_client_eval(Str) ->
                                    [binary, {packet, 4}]) of
         {ok, Socket} ->
             ok = gen_tcp:send(Socket, term_to_binary(Str)),
+            io:format("Connected to socket ~p~n", [Socket]),
             receive
                 {tcp, Socket, Bin} ->
                     io:format("Client received binary = ~p~n", [Bin]),
@@ -48,29 +49,3 @@ nano_client_eval(Str) ->
         {error, Why} -> io:format("Failed to connect to the server: ~p~n",
                                   [Why])
     end.
-
-start_seq_server() ->
-    register(seq_server, self()),
-    {ok, Listen} = gen_tcp:listen(?Port, [binary, {packet, 4},
-					 {reuseaddr, true},
-					 {active, true}]),
-    seq_loop(Listen).
-
-start_parallel_server() ->
-    {ok, Listen} = gen_tcp:listen(?Port, [binary, {packet, 4},
-                                          {reuseaddr, true},
-                                          {active, true}]),
-    io:format("Listening on Port ~p~n", [Listen]),
-    register(par_server, self()),
-    spawn(fun() -> par_connect(Listen) end).
-
-par_connect(Listen) ->
-    {ok, Socket} = gen_tcp:accept(Listen),
-    spawn(fun() ->
-                  par_connect(Listen) end),
-    loop(Socket).
-
-seq_loop(Listen) ->
-    {ok, Socket} = gen_tcp:accept(Listen),
-    loop(Socket),
-    seq_loop(Listen).
