@@ -21,3 +21,10 @@ rebar3.crashdump
 .DS_Store
 *.dat
 \#*
+
+suite.log*
+ct_*
+*.js
+*.css
+*.html
+variables-ct*
