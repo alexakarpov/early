@@ -1,5 +1,5 @@
 -module(codefights).
--export([isCryptSolution/2]).
+-export([isCryptSolution/2, foo/1]).
 
 isCryptSolution([L1, L2, A], Solution) ->
     LolToLot = fun(Alol) ->
@@ -28,7 +28,10 @@ isCryptSolution([L1, L2, A], Solution) ->
             IA == I1 + I2
     end.
 
-[["Salad", "Tomato", "Cucumber", "Salad", "Sauce"],
- ["Pizza", "Tomato", "Sausage", "Sauce", "Dough"],
- ["Quesadilla", "Chicken", "Cheese", "Sauce"],
- ["Sandwich", "Salad", "Bread", "Tomato", "Cheese"]]
+foo(X) ->
+    {ok, 42}.
+
+%% [["Salad", "Tomato", "Cucumber", "Salad", "Sauce"],
+%%  ["Pizza", "Tomato", "Sausage", "Sauce", "Dough"],
+%%  ["Quesadilla", "Chicken", "Cheese", "Sauce"],
+%%  ["Sandwich", "Salad", "Bread", "Tomato", "Cheese"]]
