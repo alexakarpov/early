@@ -6,7 +6,9 @@ all() ->
      testCrypt2,
      testCrypt3,
      testCrypt4,
-     testMapFromRow].
+     testMapFromRow1,
+     testMapFromRow2,
+     testGroupingDishes].
 
 testCrypt1(_Config) ->
     true == cf:isCryptSolution(["AA", "AB", "BC"],
@@ -29,19 +31,23 @@ testCrypt4(_Config) ->
                                         ["B","2"],
                                         ["C","4"]]).
 
-testMapFromRow(_Config) ->
-    cf:mapFromRow([v, k1, k2, k3]) == #{k => v,
+testMapFromRow1(_Config) ->
+    true = (cf:mapFromRow([v, k1, k2, k3]) == #{k1 => v,
                                                 k2 => v,
-                                                k3 => v}.
+                                                k3 => v}).
 
-%% testGroupingDishes(_Config) ->
-%%     Dishes = [["Salad", "Tomato", "Cucumber", "Salad", "Sauce"],
-%%               ["Pizza", "Tomato", "Sausage", "Sauce", "Dough"],
-%%               ["Quesadilla", "Chicken", "Cheese", "Sauce"],
-%%               ["Sandwich", "Salad", "Bread", "Tomato", "Cheese"]],
-%%     Groups = [["Cheese", "Quesadilla", "Sandwich"],
-%%      ["Salad", "Salad", "Sandwich"],
-%%      ["Sauce", "Pizza", "Quesadilla", "Salad"],
-%%      ["Tomato", "Pizza", "Salad", "Sandwich"]],
-%%     cf:groupingDishes(Dishes) == Groups.
+testMapFromRow2(_Config) ->
+    false = (cf:mapFromRow([v, k1, k2, k3]) == #{k => v,
+                                                k2 => v,
+                                                k3 => v}).
 
+testGroupingDishes(_Config) ->
+    Dishes = [["Salad", "Tomato", "Cucumber", "Salad", "Sauce"],
+              ["Pizza", "Tomato", "Sausage", "Sauce", "Dough"],
+              ["Quesadilla", "Chicken", "Cheese", "Sauce"],
+              ["Sandwich", "Salad", "Bread", "Tomato", "Cheese"]],
+    Groups = [["Cheese", "Quesadilla", "Sandwich"],
+     ["Salad", "Salad", "Sandwich"],
+     ["Sauce", "Pizza", "Quesadilla", "Salad"],
+     ["Tomato", "Pizza", "Salad", "Sandwich"]],
+    cf:groupingDishes(Dishes) == Groups.

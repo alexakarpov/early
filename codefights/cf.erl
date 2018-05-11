@@ -55,7 +55,7 @@ groupingDishes(Dishes) ->
                                       length(Ds) >= 2
                               end,
                               maps:to_list(IToDs)),
-    OList2 = lists:map(fun({I, Ds}) ->
-                               [I| lists:sort(Ds)]
-                       end,
-                       OList1).
+    OList2 = lists:sort(lists:map(fun({I, Ds}) ->
+                                          [I| lists:sort(Ds)]
+                                  end,
+                                  OList1)).
