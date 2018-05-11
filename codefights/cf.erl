@@ -37,18 +37,25 @@ mapFromRow([H|T] = Row) ->
                 T).
 
 groupingDishes(Dishes) ->
-    IngredientsToDishes = lists:foldl(fun([D|Is], AccM) ->
-                                              M1D = lists:foldl(fun(I, AccIn) ->
-                                                                        maps:put(I, D, AccIn)
-                                                                end,
-                                                                #{},
-                                                                Is)
-                                      end,
-                                      #{},
-                                      Dishes),
-    io:format("got ~p~n", [IngredientsToDishes]),
-    lists:foldl(fun(M, Acc) ->
-                        maps:keys(M)
-                end,
-                #{},
-                IngredientsToDishes).
+    IToDs = lists:foldl(fun([D|Is], AccMap) ->
+                                % list of tuples of the form {Ingredient, Dish} - dealing with a single dish
+                                LoT = maps:to_list(mapFromRow([D|Is])),
+                                lists:foldl(fun({I, D}, Acc2) ->
+                                                    case maps:get(I, Acc2, none) of
+                                                        none -> maps:put(I, [D], Acc2);
+                                                        LoV -> maps:put(I, [D|LoV], Acc2)
+                                                    end
+                                            end,
+                                            AccMap,
+                                            LoT)
+                        end,
+                        #{},
+                        Dishes),
+    OList1 = lists:filter(fun({I, Ds}) ->
+                                      length(Ds) >= 2
+                              end,
+                              maps:to_list(IToDs)),
+    OList2 = lists:map(fun({I, Ds}) ->
+                               [I| lists:sort(Ds)]
+                       end,
+                       OList1).
