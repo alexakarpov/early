@@ -59,3 +59,67 @@ groupingDishes(Dishes) ->
                                           [I| lists:sort(Ds)]
                                   end,
                                   OList1)).
+
+%% Given an array strings, determine whether it follows the sequence given in the patterns array. In other words, there should be no i and j for which strings[i] = strings[j] and patterns[i] ≠ patterns[j] or for which strings[i] ≠ strings[j] and patterns[i] = patterns[j].
+
+%% Example
+
+%% For strings = ["cat", "dog", "dog"] and patterns = ["a", "b", "b"], the output should be
+%% areFollowingPatterns(strings, patterns) = true;
+%% For strings = ["cat", "dog", "doggy"] and patterns = ["a", "b", "b"], the output should be
+%% areFollowingPatterns(strings, patterns) = false.
+
+areFollowingPatterns(Strings, Patterns) ->
+    case length(Strings) - length(Patterns) of
+        0 -> are_following_patterns(lists:zip(Patterns, Strings));
+        _ -> false
+    end.
+
+are_following_patterns(LOPP) ->
+    AMap = maps:from_list(LOPP),
+    try    
+        lists:foldl(fun({K,V}, Acc) ->
+                            case maps:get(K, Acc, none) of
+                                none -> maps:put(K, V, Acc);
+                                OV ->
+                                    if V == OV ->
+                                            Acc;
+                                       true ->
+                                            throw(bad_pattern)
+                                    end
+                            end
+                    end,
+                    #{},
+                    LOPP),
+        S = sets:from_list(maps:values(AMap)),
+        length(maps:to_list(AMap)) == sets:size(S)
+    catch
+        throw:bad_pattern -> false
+    end.
+
+containsCloseNums(Nums, K) ->
+    {_, AMap} = lists:foldl(fun(N, {Idx, Acc}) ->
+                                    {Idx+1, maps:put(Idx, N, Acc)}
+                            end,
+                            {0, #{}},
+                            Nums),
+    L = maps:to_list(AMap),
+    try
+        lists:foldl(fun({Idx, Val}, Acc) ->
+                            case maps:get(Val, Acc, none) of
+                                none  -> maps:put(Val, Idx, Acc);
+                                OldIdx ->
+                                    if Idx - OldIdx =< K ->
+                                            throw(gotcha);
+                                       true  ->
+                                            maps:put(Val, Idx, Acc)
+                                    end
+                            end
+                    end,
+                    #{},
+                    L),
+        false
+    catch
+        throw:gotcha -> true
+    end.
+
