@@ -37,18 +37,10 @@ validate(S, B) ->
                  end,
                  S)) == 0.
 
-%% You have a collection of coins, and you know the values of the coins and the quantity of each type of coin in it. You want to know how many distinct sums you can make from non-empty groupings of these coins.
+is_letter(C) ->
+   (97 =< C) and (C =< 122) or (65 =< C) and (C =< 90).
+    
+alphanumericLess(S1, S2) ->
+    false.
 
-%% Example
-
-%% For coins = [10, 50, 100] and quantity = [1, 2, 1], the output should be
-%% possibleSums(coins, quantity) = 9.
-
-possibleSums(Coins, Quantity) ->
-    Tuples = lists:zip(Coins, Quantity),
-    lists:foldl(fun({C,Q},Acc) ->
-                        lists:merge(Acc, lists:duplicate(C,Q))
-                end,
-                Tuples),
-    Sums = [S || lists:foldl(fun(N, S) -> S + N end,
-                             
+                        
