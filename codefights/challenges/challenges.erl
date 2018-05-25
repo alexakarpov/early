@@ -1,7 +1,6 @@
 -module(challenges).
 -compile(export_all).
 
-
 adaNumber(String) ->
     S = lists:filter(fun(C) ->
                          C =/= $_ end,
@@ -36,11 +35,3 @@ validate(S, B) ->
                          not(lists:member(C, ValidChars) or lists:member(C, ValidCapChars))
                  end,
                  S)) == 0.
-
-is_letter(C) ->
-   (97 =< C) and (C =< 122) or (65 =< C) and (C =< 90).
-    
-alphanumericLess(S1, S2) ->
-    false.
-
-                        
